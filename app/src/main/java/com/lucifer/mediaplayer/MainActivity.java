@@ -3,6 +3,7 @@ package com.lucifer.mediaplayer;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
     ApiService apiService;
     MusicAdapter musicAdapter;
 
+    SwipeRefreshLayout swipeRefreshLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<List<MusicModel>> call, Response<List<MusicModel>> response) {
 
                 musicAdapter = new MusicAdapter(response.body());
+                musicAdapter.notifyDataSetChanged();
                 rvMusic.setAdapter(musicAdapter);
             }
 
@@ -54,5 +58,14 @@ public class MainActivity extends AppCompatActivity {
     private void setUpViews() {
         rvMusic = findViewById(R.id.rv_main_music_list);
         rvMusic.setLayoutManager(new LinearLayoutManager(this));
+        swipeRefreshLayout = findViewById(R.id.swp_layout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getAllMusic();
+                musicAdapter.notifyDataSetChanged();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 }
