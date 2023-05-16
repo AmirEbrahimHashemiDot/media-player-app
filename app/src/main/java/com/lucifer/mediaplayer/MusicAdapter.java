@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
@@ -19,9 +20,12 @@ import java.util.List;
 public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHolder> {
 
     List<MusicModel> musicList;
+    OnMusicItemClickListener onMusicItemClickListener;
 
-    public MusicAdapter (List<MusicModel> musicList) {
+
+    public MusicAdapter(List<MusicModel> musicList, OnMusicItemClickListener onMusicItemClickListener) {
         this.musicList = musicList;
+        this.onMusicItemClickListener = onMusicItemClickListener;
     }
 
     @NonNull
@@ -37,6 +41,12 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
         Picasso.get().load(musicList.get(position).getPic()).into(holder.imgVSingerPic);
         holder.tvTitle.setText(musicList.get(position).getTitle());
         holder.tvSingerName.setText(musicList.get(position).getSinger());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onMusicItemClickListener.onMusicItemClick(musicList.get(holder.getAdapterPosition()));
+            }
+        });
     }
 
     @Override
@@ -58,5 +68,9 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
             tvSingerName = itemView.findViewById(R.id.tv_singer_name);
             btnDownload = itemView.findViewById(R.id.btn_download_music);
         }
+    }
+
+    public interface OnMusicItemClickListener {
+        public void onMusicItemClick(MusicModel music);
     }
 }
