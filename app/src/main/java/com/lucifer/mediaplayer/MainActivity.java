@@ -36,13 +36,15 @@ public class MainActivity extends AppCompatActivity {
     ApiService apiService;
     MusicAdapter musicAdapter;
     SwipeRefreshLayout swipeRefreshLayout;
-    private MediaPlayer mediaPlayer;
+    public MediaPlayer mediaPlayer;
     ConstraintLayout musicControllerBarLayout;
     TextView tvCurrentTime, tvDurationTime, tvCurrentMusicTitle;
     ImageView playPauseImgBtn, backwardImgBtn, forwardImgBtn;
-    Slider musicSlider;
-    Timer timer;
+    public Slider musicSlider;
+    public Timer timer;
     private String PPBtnStatus = "pause";
+    public Thread musicThread;
+    public String currentPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         getAllMusic();
     }
 
-    private String convertTimeToString(long duration) {
+    public String convertTimeToString(long duration) {
         long sec = (duration / 1000) % 60;
         long min = (duration / (1000 * 60)) % 60;
         return String.format(Locale.US, "%02d:%02d", min, sec);
@@ -92,23 +94,28 @@ public class MainActivity extends AppCompatActivity {
     private void setUpMediaPlayer(MusicModel music, List<MusicModel> musicList) {
         musicControllerBarLayout.setVisibility(View.VISIBLE);
         mediaPlayer = MediaPlayer.create(getApplicationContext(), Uri.parse(music.getMusic()));
+
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
                 timer = new Timer();
                 mediaPlayer.start();
+
                 tvDurationTime.setText(convertTimeToString(mediaPlayer.getDuration()));
                 tvCurrentTime.setText(convertTimeToString(mediaPlayer.getCurrentPosition()));
                 PPBtnStatus = "play";
                 playPauseImgBtn.setImageResource(R.drawable.baseline_pause_24);
+
                 musicSlider.setValueTo(mediaPlayer.getDuration());
                 tvCurrentMusicTitle.setText(music.getTitle() + ", " + music.getSinger());
+                currentPosition = convertTimeToString(mediaPlayer.getCurrentPosition());
                 timer.schedule(new TimerTask() {
                     @Override
                     public void run() {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                //tvCurrentTime.setText(currentPosition);
                                 tvCurrentTime.setText(convertTimeToString(mediaPlayer.getCurrentPosition()));
                                 try {
                                     if (mediaPlayer.getCurrentPosition() <= mediaPlayer.getDuration()) {
@@ -120,7 +127,8 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
-                                    Toast.makeText(MainActivity.this, "error", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MainActivity.this, "error2", Toast.LENGTH_SHORT).show();
+                                    Log.i("TAG_E", "e: " + e.getMessage());
                                 }
                             }
                         });
