@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<List<MusicModel>> call, Response<List<MusicModel>> response) {
                 musicAdapter = new MusicAdapter(response.body(), new MusicAdapter.OnMusicItemClickListener() {
                     @Override
-                    public void onMusicItemClick(MusicModel music) {
+                    public void onMusicItemClick(MusicModel music) { // Music Interface
                         if (mediaPlayer != null) {
                             mediaPlayer.stop();
                             //mediaPlayer.release();
@@ -77,6 +77,20 @@ public class MainActivity extends AppCompatActivity {
                         } else {
                             setUpMediaPlayer(music, response.body());
                         }
+
+                        forwardImgBtn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                            }
+                        });
+
+                        backwardImgBtn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                            }
+                        });
                     }
                 });
                 musicAdapter.notifyDataSetChanged();
@@ -123,11 +137,14 @@ public class MainActivity extends AppCompatActivity {
                                     } else {
                                         timer.cancel();
                                         musicSlider.setValue(0);
+                                        playPauseImgBtn.setImageResource(R.drawable.baseline_play_arrow_24);
+                                        PPBtnStatus = "pause";
+
                                         //mediaPlayer = null;
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
-                                    Toast.makeText(MainActivity.this, "error2", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MainActivity.this, "line 130 error", Toast.LENGTH_SHORT).show();
                                     Log.i("TAG_E", "e: " + e.getMessage());
                                 }
                             }
@@ -148,6 +165,22 @@ public class MainActivity extends AppCompatActivity {
         rvMusic = findViewById(R.id.rv_main_music_list);
         rvMusic.setLayoutManager(new LinearLayoutManager(this));
         swipeRefreshLayout = findViewById(R.id.swp_layout);
+        /*forwardImgBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediaPlayer.seekTo(((int) musicSlider.getValue() + 10000));
+                Toast.makeText(MainActivity.this, "+ 10 sec", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        backwardImgBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediaPlayer.seekTo(((int) musicSlider.getValue() - 10000));
+                Toast.makeText(MainActivity.this, "- 10 sec", Toast.LENGTH_SHORT).show();
+            }
+        });*/
+
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -168,6 +201,22 @@ public class MainActivity extends AppCompatActivity {
                     PPBtnStatus = "play";
                     mediaPlayer.start();
                     playPauseImgBtn.setImageResource(R.drawable.baseline_pause_24);
+
+                    //************************
+
+                    /*Timer timer1 = new Timer();
+                    timer1.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    tvCurrentTime.setText(convertTimeToString(mediaPlayer.getCurrentPosition()));
+                                }
+                            });
+                        }
+                    }, 1000, 1000);*/
+
                 }
             }
         });

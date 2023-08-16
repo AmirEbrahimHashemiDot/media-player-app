@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.card.MaterialCardView;
 import com.lucifer.mediaplayer.network.api.MusicModel;
 import com.squareup.picasso.Picasso;
 
@@ -44,6 +45,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                holder.mainLayout.getResources().getColor(R.color.Purple_300);
                 onMusicItemClickListener.onMusicItemClick(musicList.get(holder.getAdapterPosition()));
             }
         });
@@ -59,6 +61,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
         ImageView imgVSingerPic;
         TextView tvTitle, tvSingerName;
         AppCompatButton btnDownload;
+        MaterialCardView mainLayout;
 
         public MusicViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -67,6 +70,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
             tvTitle = itemView.findViewById(R.id.tv_title);
             tvSingerName = itemView.findViewById(R.id.tv_singer_name);
             btnDownload = itemView.findViewById(R.id.btn_download_music);
+            mainLayout = itemView.findViewById(R.id.main_material_card_layout);
         }
     }
 

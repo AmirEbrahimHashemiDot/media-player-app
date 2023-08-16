@@ -6,6 +6,7 @@
     android:layout_margin="8dp"
     app:cardElevation="8dp"
     app:strokeWidth="0dp"
+    android:id="@+id/main_material_card_layout"
     android:layout_width="match_parent"
     android:layout_height="120dp">
 
